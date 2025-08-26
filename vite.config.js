@@ -4,6 +4,13 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    origin: 'https://127.0.0.1/bestbuy-plus',
+    //host: 'true',
+  },
+
+  base: '/bestbuy-plus/',
+
   plugins: [react(), VitePWA({
     registerType: 'autoUpdate',
     injectRegister: false,
@@ -16,8 +23,9 @@ export default defineConfig({
     manifest: {
       name: 'bestbuy-plus',
       short_name: 'bestbuy-plus',
+      homepage: '/bestbuy-plus/',
       description: 'Drop-in replacement for the Best Buy mobile app, made for employees',
-      theme_color: '#ffffff',
+      theme_color: '#000000',
     },
 
     workbox: {
