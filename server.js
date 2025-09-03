@@ -7,6 +7,15 @@ const PORT = 5000
 
 app.use(cors())
 
+var corsMiddleware = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '174.100.11.163');
+    res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, PATCH, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
+
+    next();
+}
+app.use(corsMiddleware)
+
 app.get('/api/products/:sku', async (req, res) => {
   const { sku } = req.params
   const apiKey = 'HXpcTnUYOlZ68rx118Hc0pi2'
