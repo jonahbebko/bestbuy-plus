@@ -1,18 +1,18 @@
 import { useState } from 'react'
-import './Search.css'
-
-// this page shows a header at the top with a search bar containing the submitted info from the App page
-// and a list of products below it
+import Header from '../components/Header'
 
 function Search() {
+
   const [submittedQuery, setSubmittedQuery] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [products, setProducts] = useState([])
 
+  const queryParams = new URLSearchParams(window.location.search)
+  const query = queryParams.get('query') || ''
+
   const handleSubmit = (e) => {
     e.preventDefault()
     setSubmittedQuery(searchQuery)
-    // fetch products from bestbuy api
     const endpoint = `https://api.bestbuy.com/v1/products(search=${searchQuery}*)?apiKey=HXpcTnUYOlZ68rx118Hc0pi2&format=json`
     fetch(endpoint)
       .then((res) => res.json())
@@ -27,9 +27,10 @@ function Search() {
 
   return (
     <>
-      <p>
-        Search Page
-      </p>
+      <Header />
+      <div class='flex flex-col grow items-center justify-center'>
+        <p>Search page for {query}</p>
+      </div>
     </>
   )
 }
