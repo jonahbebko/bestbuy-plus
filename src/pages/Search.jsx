@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import Header from '../components/Header'
 
 function Search() {
@@ -7,8 +8,12 @@ function Search() {
   const [searchQuery, setSearchQuery] = useState('')
   const [products, setProducts] = useState([])
 
-  const queryParams = new URLSearchParams(window.location.search)
-  const query = queryParams.get('query') || ''
+  const location = useLocation()
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search)
+    setSearchQuery(searchParams.get('query') || '')
+  }, [location.search])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -28,8 +33,8 @@ function Search() {
   return (
     <>
       <Header />
-      <div class='flex flex-col grow items-center justify-center'>
-        <p>Search page for {query}</p>
+      <div className='flex flex-col grow items-center justify-center'>
+        <p>Search page for {searchQuery}</p>
       </div>
     </>
   )

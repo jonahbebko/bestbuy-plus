@@ -9,7 +9,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HashRouter>
       <App />
-      <PWABadge />
+      {/* <PWABadge /> */}
     </HashRouter>
   </StrictMode>
 )

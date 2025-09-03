@@ -1,21 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import Header from '../components/Header'
 
 function Product() {
 
   const [productResult, setProductResult] = useState(null)
   const [error, setError] = useState(null)
+  const [sku, setSku] = useState(null)
+  const [avail, setAvail] = useState(null)
 
-  const queryParams = new URLSearchParams(window.location.search)
-  const sku = queryParams.get('sku') || ''
-  const upc = queryParams.get('upc') || ''
+  const location = useLocation()
 
-  const getProductFromSKU = (sku) => {
-    const endpoint = `https://api.bestbuy.com/v1/products/${sku}.json?apiKey=HXpcTnUYOlZ68rx118Hc0pi2`
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search)
+    setSku(searchParams.get('sku') || '')
+  }, [location.search])
+
+  const getProductFromSku = (sku) => {
+    const endpoint = `http://localhost:5000/api/products/${sku}`
     fetch(endpoint)
       .then((res) => res.json())
       .then((data) => {
         setProductResult(data)
+        console.log(data)
         setError(null)
       })
       .catch((error) => {
@@ -24,11 +31,57 @@ function Product() {
       })
   }
 
+  const isAvailableAt597 = (sku) => {
+    const endpoint = `http://localhost:5000/api/products/${sku}/stores`
+    fetch(endpoint)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.stores?.length) {setAvail(data.stores[0].storeID === '597')}
+        else {setAvail(false)}
+        console.log(data)
+      })
+      .catch((error) => {
+        console.error('Error fetching store availability:', error)
+      })
+  }
+
+  useEffect(() => {
+    if (sku) {
+      setProductResult(getProductFromSku(sku))
+      isAvailableAt597(sku)
+    }
+  }, [sku])
+
   return (
     <>
       <Header />
-      <div class='flex flex-col grow items-center justify-center'>
-        <p>Product page for {sku || upc}</p>
+
+      <style>
+        {`
+          .productimage {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            align-self: center;
+          }
+        `}
+      </style>
+
+      <div className='flex flex-col grow gap-6 p-6 items-center justify-center'>
+        {error && <p className="text-red-500">{error}</p>}
+        {productResult && (
+          <div className='flex flex-col grow gap-4'>
+            <img className='productimage' src={productResult.image} height='300' width='300' alt={productResult.name} />
+            <h2><strong>{productResult.name}</strong></h2>
+            {/* <p>{productResult.longDescription.replace('&#8217;', '\'')}</p> */}
+            <p>${productResult.salePrice}</p>
+            {avail ? (
+              <p className="text-green-500">In Stock at 597</p>
+            ) : (
+              <p className="text-red-500">Out of Stock at 597</p>
+            )}
+          </div>
+        )}
       </div>
     </>
   )

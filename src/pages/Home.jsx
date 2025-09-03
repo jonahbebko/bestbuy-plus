@@ -5,10 +5,10 @@ import './Home.css'
 
 function Home() {
   return (
-    <div class='flex flex-col h-screen grow'>
+    <div className='flex flex-col h-screen grow'>
       <Header />
-      <div class='flex flex-col grow gap-5 items-center justify-center'>
-        <div class='flex flex-row gap-5 items-center'>
+      <div className='flex flex-col grow gap-5 items-center justify-center'>
+        <div className='flex flex-row gap-5 items-center'>
           {/* <img alt='logo' href='favicon.svg'/> */}
           <h1>bestbuy-plus</h1>
         </div>
